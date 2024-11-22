@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="w3.org/1999/xhtml" xmlns:th="thymeleaf.org">
+    <head>
+        <title>Registrar Aluno</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+        <div>
+            <div class="container d-flex justify-content-center mt-5">
+                <h1>Registrar Aluno</h1>
+            </div>
+            <div class="container d-flex justify-content-center my-5">
+                <div class="w-50">
+                    <div id="form-div" class="container bg-light p-4">
+                        <form th:action="@{/registrar_aluno}" th:object="${object}" method="POST">
+                            <label for="nome-input" class="form-label">Nome:</label>
+                            <input id="nome-input" th:field="*{nome}" name="nome" class="form-control mb-3" required type="text"/>
+                            <label for="matr-input" class="form-label">Nº de Matrícula:</label>
+                            <input id="matr-input" th:field="*{matricula}" name="matricula" class="form-control mb-3" required type="number" min="0"/>
+                            <label for="data-nasc-input" class="form-label">Data de Nascimento:</label>
+                            <input id="data-nasc-input" th:field="*{data}" name="dataNascimento" class="form-control mb-3" required type="date"/>
+                            
+                            <label for="serie-select" class="form-label">Serie:</label>
+                            <select id="serie-select" th:field="*{anoEscolaridade}" name="anoEscolaridade" required class="form-select mb-3">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                            
+                            <label for="turno-select" class="form-label">Turno:</label>
+                            <select id="turno-select" th:field="*{turno}" name="turno" required class="form-select mb-4">
+                                <option value="Manhã">Manhã</option>
+                                <option value="Tarde">Tarde</option>
+                            </select>
+                            
+                            <div class="d-flex justify-content-center gap-5">
+                                <a th:href="@{/}"><button class="btn btn-outline-danger px-4" type="button">Cancelar</button></a>
+                                <input class="btn btn-primary px-4" type="submit" value="Registrar"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+    </body>
+</html>

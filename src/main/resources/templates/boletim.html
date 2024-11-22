@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns="w3.org/1999/xhtml" xmlns:th="thymeleaf.org">
+    <head>
+        <title>Boletim</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+        <div class="d-flex justify-content-center">
+            <div class="w-50">
+                <div class="container d-flex justify-content-center mt-5">
+                    <h1>Boletim</h1>
+                </div>
+                <div class="container d-flex justify-content-center mt-5">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr class="text-center">
+                                <th>Disciplina</th>
+                                <th>1º Bim.</th>
+                                <th>2º Bim.</th>
+                                <th>3º Bim.</th>
+                                <th>4º Bim.</th>
+                                <th>Notas Acum.</th>
+                                <th>Média</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center" th:each="fragmentoBoletim : ${boletim.disciplinas}">
+                                <td th:text="${fragmentoBoletim.disciplinaNome}"></td>
+                                <td th:text="${fragmentoBoletim.getNotaAsString(1)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(1)} ? 'text-danger'"></td>
+                                <td th:text="${fragmentoBoletim.getNotaAsString(2)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(2)} ? 'text-danger'"></td>
+                                <td th:text="${fragmentoBoletim.getNotaAsString(3)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(3)} ? 'text-danger'"></td>
+                                <td th:text="${fragmentoBoletim.getNotaAsString(4)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(4)} ? 'text-danger'"></td>
+                                <td th:text="${fragmentoBoletim.notaAcumuladaAsString()}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></td>
+                                <td th:text="${fragmentoBoletim.getMediaAsString()}" th:classappend="${!fragmentoBoletim.taNaMedia()} ? 'text-danger'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container d-flex justify-content-between">
+                    <div>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-start"><p><strong>Nome: </strong><span th:text="${aluno.nome}"></span></p></div>
+                            <div class="d-flex justify-content-start"><p><strong>Matrícula: </strong><span th:text="${aluno.matricula}"></span></p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-end"><p><strong>Ano: </strong><span th:text="${boletim.ano}"></span></p></div>
+                            <div class="d-flex justify-content-end"><p><strong>Turno: </strong><span th:text="${aluno.turno}"></span></p></div>
+                            <div class="d-flex justify-content-end"><p><strong>Ano de escolaridade: </strong><span th:text="${aluno.anoEscolaridade}"></span></p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-5 mt-3">
+                    <a th:href="@{/}"><button class="btn btn-outline-primary px-4">Voltar</button></a>
+                    <a th:href="@{/editar_nota(matricula=${aluno.matricula},ano=${boletim.ano})}"><button class="btn btn-primary px-4">Editar Nota</button></a>
+                </div>
+            </div>
+        </div>
+        
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+    </body>
+</html>

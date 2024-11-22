@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Editar Nota</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </head>
+    <body>
+        <div>
+            <div class="container d-flex justify-content-center mt-5">
+                <h1>Editar Nota</h1>
+            </div>
+            <div class="container d-flex justify-content-center mt-5">
+                <div class="w-50">
+                    <div id="form-div" class="container bg-light p-4">
+                        <p><strong>Aluno: </strong><span th:text="${aluno.nome}"></span></p>
+                        <form th:object="${editarNotaObject}" th:action="@{/editar_nota(matricula=${matricula},ano=${ano})}" method="POST">
+                            <label for="disc-select" class="form-label">Disciplina:</label>
+                            <select id="disc-select" th:field="*{disciplina}" required class="form-select mb-3">
+                                <option th:each="disciplina : ${disciplinas}" th:value="${disciplina}" th:text="${disciplina}"></option>
+                            </select>
+                            <label for="bim-select" class="form-label">Bimestre:</label>
+                            <select id="bim-select" th:field="*{bimestre}" required class="form-select mb-3">
+                                <option th:each="bim : ${bimestres}" th:value="${bim}" th:text="${bim}"></option>
+                            </select>
+                            <label for="nota-input" class="form-label">Nota:</label>
+                            <input id="nota-input" th:field="*{nota}" required class="form-control mb-4" type="number" min="0" th:max="${notaMaxima}" step="0.01"/>
+                            <div class="d-flex justify-content-center gap-5">
+                                <a th:href="@{/boletim(matricula=${matricula},dataNascimento=${aluno.dataNascimento.toUrl()},ano=${ano})}"><button class="btn btn-outline-danger px-4" type="button">Cancelar</button></a>
+                                <input class="btn btn-primary px-4" type="submit" value="Atualizar"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+    </body>
+</html>
