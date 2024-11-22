@@ -32,7 +32,10 @@
                                 <td th:text="${fragmentoBoletim.getNotaAsString(2)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(2)} ? 'text-danger'"></td>
                                 <td th:text="${fragmentoBoletim.getNotaAsString(3)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(3)} ? 'text-danger'"></td>
                                 <td th:text="${fragmentoBoletim.getNotaAsString(4)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(4)} ? 'text-danger'"></td>
-                                <td th:text="${fragmentoBoletim.notaAcumuladaAsString()}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></td>
+                                <td>
+                                    <span th:text="${fragmentoBoletim.notaAcumuladaAsString()}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></span>
+                                    <span th:text="${fragmentoBoletim.isNotaAcumuladaNaMedia()} ? '' : (' (' + ${fragmentoBoletim.getPontosRestantesAsString()} + ')')" class="text-muted recomendacao"></span>
+                                </td>
                                 <td th:text="${fragmentoBoletim.getMediaAsString()}" th:classappend="${!fragmentoBoletim.taNaMedia()} ? 'text-danger'"></td>
                             </tr>
                         </tbody>
@@ -49,17 +52,26 @@
                         <div class="d-flex flex-column">
                             <div class="d-flex justify-content-end"><p><strong>Ano: </strong><span th:text="${boletim.ano}"></span></p></div>
                             <div class="d-flex justify-content-end"><p><strong>Turno: </strong><span th:text="${aluno.turno}"></span></p></div>
-                            <div class="d-flex justify-content-end"><p><strong>Ano de escolaridade: </strong><span th:text="${aluno.anoEscolaridade}"></span></p></div>
+                            <div class="d-flex justify-content-end"><p><strong>Ano de escolaridade: </strong><span th:text="${aluno.anoEscolaridade}"></span>º</p></div>
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center gap-5 mt-3">
+                <div>
+                    <div class="form-check">
+                        <input id="recomendacoes-check" class="form-check-input" type="checkbox"/>
+                        <label for="recomendacoes-check" class="form-check-label">Mostrar recomendações</label>
+                    </div>
+                    <p class="text-muted small mt-2 recomendacao">* As notas em parênteses são recomendações de nota para os bimestres e quanto falta para ficar na média.</p>
+                </div>
+                <div class="d-flex justify-content-center gap-5 mt-4 mb-5">
                     <a th:href="@{/}"><button class="btn btn-outline-primary px-4">Voltar</button></a>
                     <a th:href="@{/editar_nota(matricula=${aluno.matricula},ano=${boletim.ano})}"><button class="btn btn-primary px-4">Editar Nota</button></a>
                 </div>
             </div>
         </div>
         
+        <script th:src="@{/js/jquery.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/script.js}"></script>
     </body>
 </html>

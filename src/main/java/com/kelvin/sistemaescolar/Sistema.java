@@ -12,6 +12,10 @@ public class Sistema {
     private float media;
     private List<String> disciplinas;
     
+    public float pontosTotaisParaMedia() {
+        return media * quantBimestres;
+    }
+    
     public static Sistema getInstancia() {
         if(instancia == null) {
             instancia = new Sistema();

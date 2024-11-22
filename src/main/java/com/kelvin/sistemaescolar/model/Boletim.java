@@ -40,15 +40,23 @@ public class Boletim {
         }
         
         public boolean isNotaAcumuladaNaMedia() {
-            return notaAcumulada() >= (Sistema.getInstancia().getMedia() * Sistema.getInstancia().getQuantBimestres());
+            return notaAcumulada() >= Sistema.getInstancia().pontosTotaisParaMedia();
         }
         
         public String notaAcumuladaAsString() {
             return String.format("%.2f", notaAcumulada());
         }
         
+        public float getPontosRestantesParaMedia() {
+            return isNotaAcumuladaNaMedia() ? 0 : Sistema.getInstancia().pontosTotaisParaMedia() - notaAcumulada();
+        }
+        
+        public String getPontosRestantesAsString() {
+            return String.format("%.2f", getPontosRestantesParaMedia());
+        }
+        
         public float media() {
-            return notas.size() > 0 ? notaAcumulada() / notas.size() : 0f;
+            return !notas.isEmpty() ? notaAcumulada() / notas.size() : 0f;
         }
         
         public boolean taNaMedia() {
