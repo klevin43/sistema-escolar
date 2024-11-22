@@ -10,6 +10,7 @@ public class Date {
     private int mes;
     private int ano;
     
+    @Override
     public String toString() {
         return dia + "/" + mes + "/" + ano;
     }

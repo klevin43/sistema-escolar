@@ -1,6 +1,7 @@
 package com.kelvin.sistemaescolar.controller;
 
 import com.kelvin.sistemaescolar.Sistema;
+import com.kelvin.sistemaescolar.model.AcessarAlunoObject;
 import com.kelvin.sistemaescolar.model.Aluno;
 import com.kelvin.sistemaescolar.model.Boletim;
 import com.kelvin.sistemaescolar.model.Boletim.FragmentoBoletim;
@@ -65,14 +66,31 @@ public class MiscController {
     
     @GetMapping("/acessar_aluno")
     public String acessarAluno(Model model, @RequestParam String location) {
+        if(location == null || (!location.equals("dados") && !location.equals("boletim"))) {
+            return "redirect:/";
+        }
+        model.addAttribute("location", location);
+        model.addAttribute("object", new AcessarAlunoObject());
+        model.addAttribute("inputInvalido", false);
+        return "acessar_aluno";
+    }
+    
+    @PostMapping("/acessar_aluno")
+    public String acessarAlunoPost(Model model, @RequestParam String location, @ModelAttribute AcessarAlunoObject object) {
         if(location == null) {
             return "redirect:/";
         }
-        if(location.equals("dados") || location.equals("boletim")) {
+        Aluno aluno = alunos.getOrDefault(object.getMatricula(), null);
+        if(aluno == null || (!aluno.getDataNascimento().equals(Date.fromUrl(object.getData())))) {
             model.addAttribute("location", location);
+            model.addAttribute("object", object);
+            model.addAttribute("inputInvalido", true);
             return "acessar_aluno";
         }
-        return "redirect:/";
+        return "redirect:/" + location +
+            "?matricula=" + object.getMatricula() +
+            "&dataNascimento=" + object.getData() +
+            "&ano=" + object.getAno();
     }
     
     @GetMapping("/dados")

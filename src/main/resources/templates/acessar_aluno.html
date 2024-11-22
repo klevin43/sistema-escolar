@@ -14,17 +14,18 @@
             <div class="container d-flex justify-content-center mt-5">
                 <div class="w-50">
                     <div id="form-div" class="container bg-light p-4">
-                        <form th:action="@{/{loc}(loc=${location})}" method="GET">
+                        <form th:action="@{/acessar_aluno(location=${location})}" th:object="${object}" method="POST">
                             <label for="matricula-input" class="form-label">Matrícula:</label>
-                            <input id="matricula-input" name="matricula" class="form-control mb-3" type="text" required placeholder="Ex.: 123456789"/>
+                            <input id="matricula-input" th:field="*{matricula}" class="form-control mb-3" th:classappend="${inputInvalido} ? 'is-invalid'" type="text" required placeholder="Ex.: 123456789"/>
                             <label for="dia-nasc-input" class="form-label">Data de Nascimento:</label>
-                            <input id="dia-nasc-input" name="dataNascimento" class="form-control mb-3"a required type="date"/>
+                            <input id="dia-nasc-input" th:field="*{data}" class="form-control mb-3" th:classappend="${inputInvalido} ? 'is-invalid'" required type="date"/>
                             <div class="d-flex gap-3 align-items-center mb-4">
                                 <label for="ano-select">Ano:</label>
-                                <select id="ano-select" name="ano" required class="form-select w-25">
+                                <select id="ano-select" th:field="*{ano}" required class="form-select w-25">
                                     <option value="2024">2024</option>
                                 </select>
                             </div>
+                            <p th:if="${inputInvalido}" class="text-danger mt-4">Um dos campos está inválido.</p>
                             <div class="d-flex justify-content-center gap-5">
                                 <a th:href="@{/}"><button class="btn btn-outline-primary px-4" type="button">Voltar</button></a>
                                 <input class="btn btn-primary px-4" type="submit" value="Enviar"/>
