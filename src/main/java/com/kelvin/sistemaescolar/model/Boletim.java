@@ -55,6 +55,18 @@ public class Boletim {
             return String.format("%.2f", getPontosRestantesParaMedia());
         }
         
+        public float getPontosRestantesParaCadaBimestre() {
+            int quantBimestresFaltando = Sistema.getInstancia().getQuantBimestres() - notas.size();
+            if(quantBimestresFaltando == 0) {
+                return 0f;
+            }
+            return getPontosRestantesParaMedia() / quantBimestresFaltando;
+        }
+        
+        public String getPontosRestantesParaCadaBimestreAsString() {
+            return String.format("%.2f", getPontosRestantesParaCadaBimestre());
+        }
+        
         public float media() {
             return !notas.isEmpty() ? notaAcumulada() / notas.size() : 0f;
         }

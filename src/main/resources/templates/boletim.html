@@ -28,10 +28,22 @@
                         <tbody>
                             <tr class="text-center" th:each="fragmentoBoletim : ${boletim.disciplinas}">
                                 <td th:text="${fragmentoBoletim.disciplinaNome}"></td>
-                                <td th:text="${fragmentoBoletim.getNotaAsString(1)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(1)} ? 'text-danger'"></td>
-                                <td th:text="${fragmentoBoletim.getNotaAsString(2)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(2)} ? 'text-danger'"></td>
-                                <td th:text="${fragmentoBoletim.getNotaAsString(3)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(3)} ? 'text-danger'"></td>
-                                <td th:text="${fragmentoBoletim.getNotaAsString(4)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(4)} ? 'text-danger'"></td>
+                                <td>
+                                    <span th:text="${fragmentoBoletim.getNotaAsString(1)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(1)} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(1) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${fragmentoBoletim.getNotaAsString(2)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(2)} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(2) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${fragmentoBoletim.getNotaAsString(3)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(3)} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(3) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                </td>
+                                <td>
+                                    <span th:text="${fragmentoBoletim.getNotaAsString(4)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(4)} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(4) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                </td>
                                 <td>
                                     <span th:text="${fragmentoBoletim.notaAcumuladaAsString()}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></span>
                                     <span th:text="${fragmentoBoletim.isNotaAcumuladaNaMedia()} ? '' : (' (' + ${fragmentoBoletim.getPontosRestantesAsString()} + ')')" class="text-muted recomendacao"></span>
