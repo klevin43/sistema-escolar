@@ -6,7 +6,6 @@ import lombok.Data;
 public class RegistrarAlunoObject {
     private String nome;
     private String data;
-    private Integer matricula;
     private Integer anoEscolaridade;
     private String turno;
 }

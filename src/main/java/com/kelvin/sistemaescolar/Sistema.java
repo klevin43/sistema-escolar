@@ -5,15 +5,16 @@ import lombok.Data;
 
 @Data
 public class Sistema {
+    public static int QUANTIDADE_BIMESTRES = 4;
+    
     private static Sistema instancia = null;
     
-    private int quantBimestres;
     private float notaMaxima;
     private float media;
     private List<String> disciplinas;
     
     public float pontosTotaisParaMedia() {
-        return media * quantBimestres;
+        return media * QUANTIDADE_BIMESTRES;
     }
     
     public static Sistema getInstancia() {

@@ -27,7 +27,7 @@
                             <label for="nota-input" class="form-label">Nota:</label>
                             <input id="nota-input" th:field="*{nota}" required class="form-control mb-4" type="number" min="0" th:max="${notaMaxima}" step="0.01"/>
                             <div class="d-flex justify-content-center gap-5">
-                                <a th:href="@{/boletim(matricula=${matricula},dataNascimento=${aluno.dataNascimento.toUrl()},ano=${ano})}"><button class="btn btn-outline-danger px-4" type="button">Cancelar</button></a>
+                                <a th:href="@{/boletim(matricula=${matricula},dataNascimento=${aluno.dataNascimento.toString()},ano=${ano})}"><button class="btn btn-outline-danger px-4" type="button">Cancelar</button></a>
                                 <input class="btn btn-primary px-4" type="submit" value="Atualizar"/>
                             </div>
                         </form>

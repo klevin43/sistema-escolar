@@ -9,7 +9,6 @@ public class SistemaescolarApplication {
 
 	public static void main(String[] args) {
         Sistema sistema = Sistema.getInstancia();
-        sistema.setQuantBimestres(4);
         sistema.setMedia(5f);
         sistema.setNotaMaxima(10f);
         sistema.setDisciplinas(List.of(

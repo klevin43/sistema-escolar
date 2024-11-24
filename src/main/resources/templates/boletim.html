@@ -26,29 +26,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="text-center" th:each="fragmentoBoletim : ${boletim.disciplinas}">
+                            <tr class="text-center" th:each="fragmentoBoletim : ${disciplinas}">
                                 <td th:text="${fragmentoBoletim.disciplinaNome}"></td>
                                 <td>
-                                    <span th:text="${fragmentoBoletim.getNotaAsString(1)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(1)} ? 'text-danger'"></span>
-                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(1) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                    <span th:text="${formatString.formatted(fragmentoBoletim.getNota1())}" th:if="${fragmentoBoletim.getNota1() != null}" th:classappend="${!fragmentoBoletim.isNota1NaMedia()} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota1() == null}" class="text-muted recomendacao" th:text="' (' + ${formatString.formatted(fragmentoBoletim.getPontosRestantesParaCadaBimestre())} + ')'"></span>
                                 </td>
                                 <td>
-                                    <span th:text="${fragmentoBoletim.getNotaAsString(2)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(2)} ? 'text-danger'"></span>
-                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(2) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                    <span th:text="${formatString.formatted(fragmentoBoletim.getNota2())}" th:if="${fragmentoBoletim.getNota2() != null}" th:classappend="${!fragmentoBoletim.isNota2NaMedia()} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota2() == null}" class="text-muted recomendacao" th:text="' (' + ${formatString.formatted(fragmentoBoletim.getPontosRestantesParaCadaBimestre())} + ')'"></span>
                                 </td>
                                 <td>
-                                    <span th:text="${fragmentoBoletim.getNotaAsString(3)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(3)} ? 'text-danger'"></span>
-                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(3) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                    <span th:text="${formatString.formatted(fragmentoBoletim.getNota3())}" th:if="${fragmentoBoletim.getNota3() != null}" th:classappend="${!fragmentoBoletim.isNota3NaMedia()} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota3() == null}" class="text-muted recomendacao" th:text="' (' + ${formatString.formatted(fragmentoBoletim.getPontosRestantesParaCadaBimestre())} + ')'"></span>
                                 </td>
                                 <td>
-                                    <span th:text="${fragmentoBoletim.getNotaAsString(4)}" th:classappend="${!fragmentoBoletim.isNotaNaMedia(4)} ? 'text-danger'"></span>
-                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota(4) == null}" class="text-muted recomendacao" th:text="' (' + ${fragmentoBoletim.getPontosRestantesParaCadaBimestreAsString()} + ')'"></span>
+                                    <span th:text="${formatString.formatted(fragmentoBoletim.getNota4())}" th:if="${fragmentoBoletim.getNota4() != null}" th:classappend="${!fragmentoBoletim.isNota4NaMedia()} ? 'text-danger'"></span>
+                                    <span th:if="${!fragmentoBoletim.isNotaAcumuladaNaMedia() && fragmentoBoletim.getNota4() == null}" class="text-muted recomendacao" th:text="' (' + ${formatString.formatted(fragmentoBoletim.getPontosRestantesParaCadaBimestre())} + ')'"></span>
                                 </td>
                                 <td>
-                                    <span th:text="${fragmentoBoletim.notaAcumuladaAsString()}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></span>
-                                    <span th:text="${fragmentoBoletim.isNotaAcumuladaNaMedia()} ? '' : (' (' + ${fragmentoBoletim.getPontosRestantesAsString()} + ')')" class="text-muted recomendacao"></span>
+                                    <span th:text="${formatString.formatted(fragmentoBoletim.notaAcumulada())}" th:classappend="${!fragmentoBoletim.isNotaAcumuladaNaMedia()} ? 'text-danger'"></span>
+                                    <span th:text="${fragmentoBoletim.isNotaAcumuladaNaMedia()} ? '' : (' (' + ${formatString.formatted(fragmentoBoletim.getPontosRestantesParaMedia())} + ')')" class="text-muted recomendacao"></span>
                                 </td>
-                                <td th:text="${fragmentoBoletim.getMediaAsString()}" th:classappend="${!fragmentoBoletim.taNaMedia()} ? 'text-danger'"></td>
+                                <td th:text="${formatString.formatted(fragmentoBoletim.getMedia())}" th:classappend="${!fragmentoBoletim.taNaMedia()} ? 'text-danger'"></td>
                             </tr>
                         </tbody>
                     </table>

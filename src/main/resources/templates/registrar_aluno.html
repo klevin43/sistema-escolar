@@ -17,8 +17,6 @@
                         <form th:action="@{/registrar_aluno}" th:object="${object}" method="POST">
                             <label for="nome-input" class="form-label">Nome:</label>
                             <input id="nome-input" th:field="*{nome}" name="nome" class="form-control mb-3" required type="text"/>
-                            <label for="matr-input" class="form-label">Nº de Matrícula:</label>
-                            <input id="matr-input" th:field="*{matricula}" name="matricula" class="form-control mb-3" required type="number" min="0"/>
                             <label for="data-nasc-input" class="form-label">Data de Nascimento:</label>
                             <input id="data-nasc-input" th:field="*{data}" name="dataNascimento" class="form-control mb-3" required type="date"/>
                             

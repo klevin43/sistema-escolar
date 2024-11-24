@@ -2,17 +2,18 @@ package com.kelvin.sistemaescolar.controller;
 
 import com.kelvin.sistemaescolar.Sistema;
 import com.kelvin.sistemaescolar.model.AcessarAlunoObject;
-import com.kelvin.sistemaescolar.model.Aluno;
-import com.kelvin.sistemaescolar.model.Boletim;
-import com.kelvin.sistemaescolar.model.Boletim.FragmentoBoletim;
-import com.kelvin.sistemaescolar.model.Date;
+import com.kelvin.sistemaescolar.data.Aluno;
+import com.kelvin.sistemaescolar.data.Boletim;
+import com.kelvin.sistemaescolar.data.FragmentoBoletim;
 import com.kelvin.sistemaescolar.model.EditarNotaObject;
 import com.kelvin.sistemaescolar.model.RegistrarAlunoObject;
-import java.util.ArrayList;
+import com.kelvin.sistemaescolar.service.AlunoService;
+import com.kelvin.sistemaescolar.service.BoletimService;
+import com.kelvin.sistemaescolar.service.FragmentoBoletimService;
+import java.sql.Date;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.IntStream;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MiscController {
-    Map<Integer, Aluno> alunos = new HashMap<>(Map.of(
-        123456789, new Aluno("João Donalds", new Date(30, 4, 1925), 123456789, 2, "Manhã",
-            new Boletim(2024, List.of(
-                new FragmentoBoletim("Português", new ArrayList<>(List.of(5f, 5f, 4.5f))),
-                new FragmentoBoletim("Geografia", new ArrayList<>(List.of(7f, 2.5f, 5.5f))),
-                new FragmentoBoletim("Matemática", new ArrayList<>(List.of(9.5f, 1.5f, 9f))),
-                new FragmentoBoletim("Física", new ArrayList<>(List.of(7f, 7f, 7f))),
-                new FragmentoBoletim("Química", new ArrayList<>(List.of(1f, 9f, 10f))),
-                new FragmentoBoletim("História", new ArrayList<>(List.of(10f, 9f, 9f))),
-                new FragmentoBoletim("Biologia", new ArrayList<>(List.of(10f, 10f, 10f)))
-            ))
-        )
-    ));
+    @Autowired
+    private AlunoService alunoService;
+    @Autowired
+    private BoletimService boletimService;
+    @Autowired
+    private FragmentoBoletimService fragmentoService;
     
     @GetMapping("/")
     public String inicio() {
@@ -48,20 +42,26 @@ public class MiscController {
     }
     
     @PostMapping("/registrar_aluno")
-    public String registrarAlunoPost(@ModelAttribute RegistrarAlunoObject object, @ModelAttribute String data) {
+    public String registrarAlunoPost(@ModelAttribute RegistrarAlunoObject object) {
         Aluno aluno = new Aluno();
         aluno.setNome(object.getNome());
-        aluno.setDataNascimento(Date.fromUrl(object.getData()));
-        aluno.setMatricula(object.getMatricula());
+        aluno.setDataNascimento(Date.valueOf(object.getData()));
         aluno.setAnoEscolaridade(object.getAnoEscolaridade());
         aluno.setTurno(object.getTurno());
-        List<FragmentoBoletim> fragmentos = new ArrayList<>();
+        // aluno.setBoletim(boletim);
+        alunoService.criarAluno(aluno);
+        
+        Boletim boletim = new Boletim();
+        boletim.setAno(2024);
+        boletim.setMatricula(aluno.getMatricula());
+        boletimService.criarBoletim(boletim);
         for(String disciplina : Sistema.getInstancia().getDisciplinas()) {
-            fragmentos.add(new FragmentoBoletim(disciplina, new ArrayList<>()));
+            FragmentoBoletim fragmento = new FragmentoBoletim();
+            fragmento.setBoletim(boletim);
+            fragmento.setDisciplinaNome(disciplina);
+            fragmentoService.criarFragmentoBoletim(fragmento);
         }
-        aluno.setBoletim(new Boletim(2024, fragmentos));
-        alunos.put(aluno.getMatricula(), aluno);
-        return "redirect:/dados?matricula=" + aluno.getMatricula() + "&ano=" + aluno.getBoletim().getAno();
+        return "redirect:/dados?matricula=" + aluno.getMatricula() + "&ano=" + boletim.getAno();
     }
     
     @GetMapping("/acessar_aluno")
@@ -80,15 +80,15 @@ public class MiscController {
         if(location == null) {
             return "redirect:/";
         }
-        Aluno aluno = alunos.getOrDefault(object.getMatricula(), null);
-        if(aluno == null || (!aluno.getDataNascimento().equals(Date.fromUrl(object.getData())))) {
+        Aluno aluno = alunoService.getAluno(object.getMatricula());
+        if(aluno == null || !aluno.getDataNascimento().equals(Date.valueOf(object.getData()))) {
             model.addAttribute("location", location);
             model.addAttribute("object", object);
             model.addAttribute("inputInvalido", true);
             return "acessar_aluno";
         }
         return "redirect:/" + location +
-            "?matricula=" + object.getMatricula() +
+            "?matricula=" + aluno.getMatricula() +
             "&dataNascimento=" + object.getData() +
             "&ano=" + object.getAno();
     }
@@ -98,7 +98,7 @@ public class MiscController {
         if(matricula == null) {
             return "redirect:/";
         }
-        Aluno aluno = alunos.getOrDefault(matricula, null);
+        Aluno aluno = alunoService.getAluno(matricula);
         if(aluno == null) {
             return "redirect:/";
         }
@@ -109,18 +109,24 @@ public class MiscController {
     }
     
     @GetMapping("/boletim")
-    public String boletim(Model model, @RequestParam Integer matricula) {
+    public String boletim(Model model, @RequestParam Integer matricula, @RequestParam Integer ano) {
         if(matricula == null) {
             return "redirect:/";
         }
-        Aluno aluno = alunos.getOrDefault(matricula, null);
+        Boletim boletim = boletimService.getBoletim(matricula, ano);
+        if(boletim == null) {
+            return "redirect:/";
+        }
+        Aluno aluno = alunoService.getAluno(matricula);
         if(aluno == null) {
             return "redirect:/";
         }
         model.addAttribute("media", Sistema.getInstancia().getMedia());
-        model.addAttribute("quantBim", Sistema.getInstancia().getQuantBimestres());
+        model.addAttribute("quantBim", Sistema.QUANTIDADE_BIMESTRES);
         model.addAttribute("aluno", aluno);
-        model.addAttribute("boletim", aluno.getBoletim());
+        model.addAttribute("boletim", boletim);
+        model.addAttribute("disciplinas", fragmentoService.getFragmentosBoletim(boletim));
+        model.addAttribute("formatString", "%.2f");
         return "boletim";
     }
     
@@ -129,14 +135,18 @@ public class MiscController {
         if(matricula == null || ano == null) {
             return "redirect:/";
         }
-        Aluno aluno = alunos.getOrDefault(matricula, null);
+        Boletim boletim = boletimService.getBoletim(matricula, ano);
+        if(boletim == null) {
+            return "redirect:/";
+        }
+        Aluno aluno = alunoService.getAluno(matricula);
         if(aluno == null) {
             return "redirect:/";
         }
         model.addAttribute("editarNotaObject", new EditarNotaObject());
         model.addAttribute("aluno", aluno);
         model.addAttribute("disciplinas", Sistema.getInstancia().getDisciplinas());
-        model.addAttribute("bimestres", IntStream.range(1, Sistema.getInstancia().getQuantBimestres() + 1).toArray());
+        model.addAttribute("bimestres", IntStream.range(1, Sistema.QUANTIDADE_BIMESTRES + 1).toArray());
         model.addAttribute("matricula", matricula);
         model.addAttribute("ano", ano);
         model.addAttribute("notaMaxima", Sistema.getInstancia().getNotaMaxima());
@@ -148,13 +158,41 @@ public class MiscController {
         if(matricula == null || ano == null) {
             return "redirect:/";
         }
-        Aluno aluno = alunos.getOrDefault(matricula, null);
+        Boletim boletim = boletimService.getBoletim(matricula, ano);
+        if(boletim == null) {
+            return "redirect:/";
+        }
+        Aluno aluno = alunoService.getAluno(matricula);
         if(aluno == null) {
             return "redirect:/";
         }
-        aluno.getBoletim().editarNota(editarNotaObject.getDisciplina(), Integer.valueOf(editarNotaObject.getBimestre()), editarNotaObject.getNota());
-        return "redirect:/boletim?matricula=" + aluno.getMatricula() +
-            "&dataNascimento=" + aluno.getDataNascimento().toUrl() +
+        editarNota(boletim, editarNotaObject.getDisciplina(), Integer.valueOf(editarNotaObject.getBimestre()), editarNotaObject.getNota());
+        return "redirect:/boletim?matricula=" + matricula +
+            "&dataNascimento=" + aluno.getDataNascimento().toString() +
             "&ano=" + ano;
+    }
+    
+    private boolean editarNota(Boletim boletim, String disciplina, int bim, float nota) {
+        if(bim <= 0) {
+            return false;
+        }
+        if(nota < 0 || nota > Sistema.getInstancia().getNotaMaxima()) {
+            return false;
+        }
+        List<FragmentoBoletim> disciplinas = fragmentoService.getFragmentosBoletim(boletim);
+        for(FragmentoBoletim fragmento : disciplinas) {
+            if(!fragmento.getDisciplinaNome().equals(disciplina)) {
+                continue;
+            }
+            switch(bim) {
+                case 1 -> fragmento.setNota1(nota);
+                case 2 -> fragmento.setNota2(nota);
+                case 3 -> fragmento.setNota3(nota);
+                case 4 -> fragmento.setNota4(nota);
+            }
+            fragmentoService.atualizarFragmentoBoletim(fragmento.getId(), fragmento);
+            break;
+        }
+        return true;
     }
 }
