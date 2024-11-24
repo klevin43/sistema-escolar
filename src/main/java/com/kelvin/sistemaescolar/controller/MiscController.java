@@ -38,17 +38,23 @@ public class MiscController {
     @GetMapping("/registrar_aluno")
     public String registrarAluno(Model model) {
         model.addAttribute("object", new RegistrarAlunoObject());
+        model.addAttribute("inputInvalido", false);
         return "registrar_aluno";
     }
     
     @PostMapping("/registrar_aluno")
-    public String registrarAlunoPost(@ModelAttribute RegistrarAlunoObject object) {
+    public String registrarAlunoPost(Model model, @ModelAttribute RegistrarAlunoObject object) {
+        if(object.getNome().isBlank()) {
+            model.addAttribute("object", object);
+            model.addAttribute("inputInvalido", true);
+            return "registrar_aluno";
+        }
+        
         Aluno aluno = new Aluno();
         aluno.setNome(object.getNome());
         aluno.setDataNascimento(Date.valueOf(object.getData()));
         aluno.setAnoEscolaridade(object.getAnoEscolaridade());
         aluno.setTurno(object.getTurno());
-        // aluno.setBoletim(boletim);
         alunoService.criarAluno(aluno);
         
         Boletim boletim = new Boletim();

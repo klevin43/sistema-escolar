@@ -16,7 +16,8 @@
                     <div id="form-div" class="container bg-light p-4">
                         <form th:action="@{/registrar_aluno}" th:object="${object}" method="POST">
                             <label for="nome-input" class="form-label">Nome:</label>
-                            <input id="nome-input" th:field="*{nome}" name="nome" class="form-control mb-3" required type="text"/>
+                            <input id="nome-input" th:field="*{nome}" name="nome" class="form-control mb-3" th:classappend="${inputInvalido} ? 'is-invalid'" required type="text"/>
+                            <p th:if="${inputInvalido}" class="text-danger">O nome não pode ficar em branco.</p>
                             <label for="data-nasc-input" class="form-label">Data de Nascimento:</label>
                             <input id="data-nasc-input" th:field="*{data}" name="dataNascimento" class="form-control mb-3" required type="date"/>
                             
